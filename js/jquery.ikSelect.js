@@ -11,6 +11,7 @@
 		customClass: "",
 		ddCustomClass: "",
 		ddMaxHeight: 200,
+        topShift: true,
 		filter: false,
 		onShow: function () {},
 		onHide: function () {},
@@ -23,8 +24,8 @@
 	var shownOnPurpose = false; // true if show_dropdown was called using API
 	var scrollbarWidth = -1;
 
-	$.browser.mobile = (/iphone|ipad|ipod|android/i.test(navigator.userAgent.toLowerCase()));
-	$.browser.operamini = Object.prototype.toString.call(window.operamini) === "[object OperaMini]";
+	var browserMobile = (/iphone|ipad|ipod|android/i.test(navigator.userAgent.toLowerCase()));
+	var browserOperamini = Object.prototype.toString.call(window.operamini) === "[object OperaMini]";
 
 	function IkSelect(element, options) {
 		var ikselect = this;
@@ -51,7 +52,7 @@
 		ikselect.listItemsOriginal = $([]); // contains original list items when filtering
 		ikselect.nothingFoundText = $("<div class=\"ik_nothing_found\"/>").html(ikselect.select.data("nothingfoundtext"));
 
-		if (ikselect.options.filter && ! $.browser.mobile) {
+		if (ikselect.options.filter && ! browserMobile) {
 			ikselect.filterWrap = $(".ik_select_filter_wrap", ikselect.fakeSelect);
 
 			if (! ikselect.filterWrap.length) {
@@ -303,7 +304,7 @@
 			select.after(fakeSelect);
 
 			// appending filter if needed
-			if (ikselect.options.filter && ! $.browser.mobile) {
+			if (ikselect.options.filter && ! browserMobile) {
 				list.prepend(ikselect.filterWrap);
 			}
 
@@ -375,7 +376,7 @@
 			});
 
 			// show the original select in mobile browsers
-			if ($.browser.mobile) {
+			if (browserMobile) {
 				select.css({
 					opacity: 0,
 					left: 0,
@@ -487,7 +488,7 @@
 			var block = ikselect.block;
 			var select = ikselect.select;
 
-			if (ikselect.options.filter && ! $.browser.mobile) {
+			if (ikselect.options.filter && ! browserMobile) {
 				ikselect.filter.val("").keyup();
 			}
 
@@ -548,7 +549,7 @@
 
 			// if the dropdown's bottom border is beyond window's edge then move the dropdown to the left so that it fits
 			block.css("top", "");
-			if (block.offset().top + block.outerHeight(true) > $window.scrollTop() + $window.height()) {
+            if (ikselect.options.topShift && block.offset().top + block.outerHeight(true) > $window.scrollTop() + $window.height()) {
 				block.css("top", ((block.offset().top + block.outerHeight(true) - parseInt(block.css("top"), 10)) - ($window.scrollTop() + $window.height())) * (-1));
 			}
 
@@ -557,6 +558,7 @@
 				left = 0;
 			}
 			var top = block.offset().top;
+            block.css('width', '');
 			block.width(block.width());
 			block.appendTo("body").css({
 				"left": left,
@@ -902,7 +904,7 @@
 
 	$.fn.ikSelect = function (options) {
 		//do nothing if opera mini
-		if ($.browser.operamini) {
+		if (browserOperamini) {
 			return this;
 		}
 
