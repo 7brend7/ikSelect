@@ -429,6 +429,13 @@
 			ikselect.listItems = $("li:not(.ik_select_optgroup)", listInner);
 
 			ikselect._attach_list_events(ikselect.listItems);
+
+            if(select.prop('disabled')) {
+                ikselect.disable_select();
+            }
+            else {
+                ikselect.enable_select();
+            }
 		},
 
 		// binds click and mouseover events to dropdown's options
